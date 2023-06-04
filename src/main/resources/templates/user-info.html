@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>User Info</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .user-info {
+      width: 400px;
+      margin: 0 auto;
+    }
+
+    .user-info label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .user-info p {
+      margin-top: 0;
+    }
+
+    .button-group {
+      text-align: center;
+      margin: 20px auto;
+      width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .button-group button {
+      display: inline-block;
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .button-group button.add {
+      background-color: #4CAF50;
+    }
+
+    .button-group button.edit {
+      background-color: #2196F3;
+    }
+
+    .button-group button.delete {
+      background-color: #f44336;
+    }
+
+    .header {
+      width: 100%;
+      padding: 8px 150px 8px 8px;
+      display: grid;
+      grid-template-columns: 150px auto;
+      align-items: center;
+    }
+
+    .header h1 {
+      text-align: center;
+      margin-right: 150px;
+    }
+
+    .header button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      max-width: 120px;
+      height: fit-content;
+    }
+  </style>
+</head>
+<body>
+<header class="header">
+  <button class="create" onclick="location.href='/users/list'">Home</button>
+  <h1>User Info</h1>
+</header>
+
+<div class="user-info">
+  <label>ID:</label>
+  <p th:text="${user.id}"></p>
+
+  <label>Username:</label>
+  <p th:text="${user.username}"></p>
+
+  <label>Email:</label>
+  <p th:text="${user.email}"></p>
+</div>
+
+<div class="button-group">
+  <a th:href="'/users/add'">
+    <button class="add">New user</button>
+  </a>
+  <a th:href="'/users/edit/' + ${user.id}">
+    <button class="edit">Edit</button>
+  </a>
+  <form th:action="@{/users/delete/{id}(id=${user.id})}" method="post">
+    <button class="delete">Delete</button>
+  </form>
+</div>
+
+</body>
+</html>

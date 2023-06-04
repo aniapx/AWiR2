@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add User</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        form {
+            width: 400px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-group .error-message {
+            color: #f44336;
+            font-size: 14px;
+        }
+
+        .form-group .file-upload-label {
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 6px;
+            cursor: pointer;
+        }
+
+        .form-group .file-upload-label:hover {
+            background-color: #f0f0f0;
+        }
+
+        .form-group .file-upload-input {
+            display: none;
+        }
+
+        .form-group .file-name {
+            margin-top: 5px;
+        }
+
+        .form-group .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .header {
+            width: 100%;
+            padding: 8px 150px 8px 8px;
+            display: grid;
+            grid-template-columns: 150px auto;
+            align-items: center;
+        }
+
+        .header h1 {
+            text-align: center;
+            margin-right: 150px;
+        }
+
+        .header button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            max-width: 120px;
+            height: fit-content;
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <button class="create" onclick="location.href='/users/list'">Home</button>
+    <h1>Edit User</h1>
+</header>
+
+<form action="#" th:action="@{/users/edit/{id}(id=${user.id})}" th:object="${user}" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" th:field="*{username}">
+        <span class="error-message" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
+    </div>
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" th:field="*{email}">
+        <span class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+    </div>
+    <div class="form-group">
+        <label for="file">Upload File:</label>
+        <label class="file-upload-label" for="file">
+            <input type="file" id="file" name="file" class="file-upload-input">
+            Choose File
+        </label>
+        <span class="file-name" id="file-name"></span>
+        <span class="error-message" th:if="${error}" th:text="${error}"></span>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="submit-btn">Submit</button>
+    </div>
+</form>
+
+<script>
+    const fileInput = document.getElementById('file');
+    const fileNameSpan = document.getElementById('file-name');
+
+    fileInput.addEventListener('change', function() {
+        fileNameSpan.textContent = fileInput.files[0].name;
+    });
+</script>
+</body>
+</html>
