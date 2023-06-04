@@ -95,8 +95,7 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    public String userSubmit(@ModelAttribute @Valid User user, BindingResult bindingResult,
-                             @RequestParam("file") MultipartFile file, Model model) {
+    public String userSubmit(@ModelAttribute @Valid User user, BindingResult bindingResult, @RequestParam("file") MultipartFile file, Model model) {
         if (bindingResult.hasErrors()) {
             return "add-user";
         }

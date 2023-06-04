@@ -20,10 +20,10 @@ public class User {
     @GeneratedValue
     private long id;
 
-    @NotNull(message = "username can not be null")
+    @NotNull(message = "Username can not be null")
     private String username;
 
-    @NotNull(message = "email can not be null")
-    @Email(message="Please provide a valid email address")
+    @NotNull(message = "Email can not be null")
+    @Email(message = "Please provide a valid email address")
     private String email;
 }

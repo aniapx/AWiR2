@@ -1,4 +1,5 @@
 package edu.zut.awir2.Models;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

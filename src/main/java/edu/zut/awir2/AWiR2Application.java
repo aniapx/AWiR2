@@ -8,8 +8,8 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 @EntityScan("edu.zut.awir2.Models")
 public class AWiR2Application {
 
-	public static void main(String[] args) {
-		SpringApplication.run(AWiR2Application.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(AWiR2Application.class, args);
+    }
 
 }

@@ -103,7 +103,8 @@
     <h1>Edit User</h1>
 </header>
 
-<form action="#" th:action="@{/users/edit/{id}(id=${user.id})}" th:object="${user}" method="post" enctype="multipart/form-data">
+<form action="#" th:action="@{/users/edit/{id}(id=${user.id})}" th:object="${user}" method="post"
+      enctype="multipart/form-data">
     <div class="form-group">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" th:field="*{username}">
@@ -133,7 +134,7 @@
     const fileInput = document.getElementById('file');
     const fileNameSpan = document.getElementById('file-name');
 
-    fileInput.addEventListener('change', function() {
+    fileInput.addEventListener('change', function () {
         fileNameSpan.textContent = fileInput.files[0].name;
     });
 </script>

@@ -3,6 +3,7 @@ package edu.zut.awir2.Controllers;
 import edu.zut.awir2.Models.Result;
 import edu.zut.awir2.Models.User;
 import edu.zut.awir2.Repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,47 +11,85 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-public class UserRestController {
+public class UserRestController implements UserApi {
 
     @Autowired
-    UserRepository repository;
-    @PostMapping("/add_user")
-    public ResponseEntity addUser(@RequestBody User user){
+    UserRepository userRepository;
+
+    @GetMapping("/all")
+    public ResponseEntity getAllUsers() {
         try {
-            repository.save(user);
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(new Result());
-        }
-        catch (Exception e) {
+                    .body(userRepository.findAll());
+        } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.FORBIDDEN)
-                    .body(new Error());
+                    .body(new Error("Forbidden", e.getCause()));
         }
-
     }
 
-//    @DeleteMapping("/delete_user/{name}")
-//    public ResponseEntity deleteUser(@PathVariable String name) {
-//        try {
-//            repository.deleteByName(name);
-//            return ResponseEntity.status(HttpStatus.OK).body(new Result()); // obiekt Result należy zainicjować
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Error()); // obiekt Error mależy zainicjować
-//        }
-//    }
-
-    @GetMapping("/get_user/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity getUser(@PathVariable long id) {
         try {
             return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(repository.findUserById(id));
-        }
-        catch (Exception e) {
+                    .status(HttpStatus.OK)
+                    .body(userRepository.findUserById(id));
+        } catch (Exception e) {
             return ResponseEntity
-                .status(HttpStatus.FORBIDDEN)
-                .body(new Error());// obiekt Error mależy zainicjować
+                    .status(HttpStatus.FORBIDDEN)
+                    .body(new Error("Forbidden", e.getCause()));
+        }
+    }
+
+    @PostMapping("/")
+    public ResponseEntity addUser(@RequestBody User user) {
+        try {
+            userRepository.save(user);
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new Result(200));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body(new Error("Forbidden", e.getCause()));
+        }
+    }
+
+    @PutMapping("/")
+    public ResponseEntity editUser(@RequestBody User updatedUser) {
+        try {
+            User existingUser = userRepository.findById(updatedUser.getId()).orElse(null);
+            existingUser.setUsername(updatedUser.getUsername());
+            existingUser.setEmail(updatedUser.getEmail());
+
+            userRepository.save(existingUser);
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new Result(200));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body(new Error("Forbidden", e.getCause()));
+        }
+    }
+
+    @Transactional
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity deleteUser(@PathVariable long id) {
+        try {
+            User user = userRepository.findUserById(id);
+            if (user != null) {
+                userRepository.deleteUserById(id);
+            }
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new Result(200));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body(new Error("Forbidden", e.getCause()));
         }
     }
 }
