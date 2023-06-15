@@ -1,8 +1,11 @@
 package edu.zut.awir2.Controllers;
 
 import edu.zut.awir2.Exceptions.StorageFileNotFoundException;
+import edu.zut.awir2.Models.PdfFile;
 import edu.zut.awir2.Models.User;
+import edu.zut.awir2.Repository.PdfFileRepository;
 import edu.zut.awir2.Repository.UserRepository;
+import edu.zut.awir2.Services.PdfFileService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/users")
@@ -26,6 +30,9 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    PdfFileService pdfFileService;
 
     @GetMapping("/list")
     public String userList(Model model) {
@@ -54,6 +61,9 @@ public class UserController {
         User user = userRepository.findUserById(id);
         model.addAttribute("user", user);
 
+        Optional<PdfFile> pdfFileOptional = pdfFileService.getPdfFileById(user.getPdfFileId());
+        pdfFileOptional.ifPresent(pdfFile -> model.addAttribute("file", pdfFile));
+
         return "user-info";
     }
 
@@ -71,6 +81,8 @@ public class UserController {
         } else {
             model.addAttribute("error", "User not found");
         }
+
+        pdfFileService.deletePdfFileById(user.getPdfFileId());
 
         List<User> users = userRepository.findAll();
         model.addAttribute("users", users);
@@ -102,10 +114,9 @@ public class UserController {
 
         if (!file.isEmpty()) {
             try {
-                String filePath = "C:\\Users\\annap\\Desktop\\test\\" + file.getOriginalFilename();
-                Path path = Paths.get(filePath);
-                Files.write(path, file.getBytes());
-                System.out.println("File saved to: " + path);
+                var pdfFile = pdfFileService.savePdfFile(file.getOriginalFilename(), file.getBytes());
+                model.addAttribute("file", pdfFile);
+                user.setPdfFileId(pdfFile.getId());
             } catch (IOException e) {
                 e.printStackTrace();
                 model.addAttribute("error", "Failed to upload the file.");
@@ -120,10 +131,8 @@ public class UserController {
             return "add-user";
         }
 
-        //store(file); // TODO zapis pliku do bazy – to dodamy w następnym ćwiczeniu
-
-        model.addAttribute("user", user);
         userRepository.save(user);
+        model.addAttribute("user", user);
 
         return "user-info";
     }
@@ -137,4 +146,5 @@ public class UserController {
     public RedirectView homePageRedirect() {
         return new RedirectView("/users/list");
     }
+
 }

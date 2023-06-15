@@ -58,7 +58,8 @@
             cursor: pointer;
         }
 
-        .button-group button.edit {
+        .button-group button.edit,
+        .button-group button.view {
             background-color: #2196F3;
         }
 
@@ -118,6 +119,9 @@
         <td th:text="${user.username}"></td>
         <td th:text="${user.email}"></td>
         <td class="button-group">
+            <a th:href="'/users/' + ${user.id}">
+                <button class="view">View</button>
+            </a>
             <a th:href="'/users/edit/' + ${user.id}">
                 <button class="edit">Edit</button>
             </a>

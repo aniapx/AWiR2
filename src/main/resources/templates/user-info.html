@@ -13,18 +13,18 @@
             text-align: center;
         }
 
-        .user-info {
+        .info {
             width: 400px;
             margin: 0 auto;
         }
 
-        .user-info label {
+        .info label {
             display: block;
             font-weight: bold;
             margin-bottom: 5px;
         }
 
-        .user-info p {
+        .info p {
             margin-top: 0;
         }
 
@@ -37,7 +37,8 @@
             gap: 8px;
         }
 
-        .button-group button {
+        .button-group button,
+        .info button {
             display: inline-block;
             width: 100%;
             padding: 10px;
@@ -58,6 +59,10 @@
 
         .button-group button.delete {
             background-color: #f44336;
+        }
+
+        .info button.download {
+            color: #000;
         }
 
         .header {
@@ -94,7 +99,7 @@
     <h1>User Info</h1>
 </header>
 
-<div class="user-info">
+<div class="info">
     <label>ID:</label>
     <p th:text="${user.id}"></p>
 
@@ -103,6 +108,15 @@
 
     <label>Email:</label>
     <p th:text="${user.email}"></p>
+</div>
+
+<div class="info">
+    <label>Assigned file:</label>
+    <p th:text="${file.fileName}"></p>
+
+    <a th:href="'/pdf/' + ${file.id}" download>
+        <button class="download">Download file</button>
+    </a>
 </div>
 
 <div class="button-group">
