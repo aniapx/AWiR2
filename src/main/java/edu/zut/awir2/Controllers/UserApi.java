@@ -34,23 +34,23 @@ public interface UserApi {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = User.class)),
                     @Content(mediaType = "application/xml", schema = @Schema(implementation = User.class))
             }),
-            @ApiResponse(description = "User not found", responseCode = "404", content = @Content),
-            @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content)
+            @ApiResponse(description = "User not found", responseCode = "404", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
+            @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class)))
     })
     public ResponseEntity getUser(@PathVariable long id);
 
     @Operation(summary = "Add a new user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User added successfully", content = @Content(schema = @Schema(implementation = User.class))),
-            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(implementation = Error.class)))
+            @ApiResponse(responseCode = "200", description = "User added successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Result.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class)))
     })
     public ResponseEntity addUser(@RequestBody User user);
 
     @PutMapping("/")
     @Operation(summary = "Edit a user")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User updated successfully"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - Error updating user")
+            @ApiResponse(responseCode = "200", description = "User updated successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Result.class))),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class)))
     })
     public ResponseEntity editUser(@RequestBody User updatedUser);
 
